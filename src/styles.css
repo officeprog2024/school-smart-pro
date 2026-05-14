@@ -1238,6 +1238,174 @@ body.sidebar-always .sidebar-close { display: none; }
   text-align: center; font-size: 12.5px;
   color: var(--footer-text-muted);
   position: relative; z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.admin-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--footer-text-muted);
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.06);
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.admin-link:hover { background: rgba(255,255,255,0.14); color: #fff; }
+.admin-link svg { opacity: 0.85; }
+
+/* ============== ADMIN LOGIN MODAL ============== */
+.admin-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 14, 28, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 500;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  animation: amFade .25s ease-out;
+}
+@keyframes amFade { from { opacity: 0; } to { opacity: 1; } }
+.admin-modal {
+  background: #fff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 420px;
+  padding: 32px 32px 28px;
+  position: relative;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+  animation: amSlide .3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes amSlide { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.admin-modal-close {
+  position: absolute;
+  top: 14px;
+  inset-inline-start: 14px;
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: #f3f4f6;
+  color: #4b5563;
+  display: grid; place-items: center;
+  cursor: pointer;
+  transition: background .15s;
+}
+.admin-modal-close:hover { background: #e5e7eb; color: #1a1a1a; }
+
+.admin-modal-head {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.admin-modal-ico {
+  width: 56px; height: 56px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #1a3a6e, #142b54);
+  color: #fff;
+  display: grid; place-items: center;
+  margin: 0 auto 14px;
+  box-shadow: 0 10px 24px -8px rgba(26,58,110,0.5);
+}
+.admin-modal-head h3 {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1a3a6e;
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+.admin-modal-head p {
+  font-size: 13.5px;
+  color: #6b7280;
+}
+
+.admin-form { display: flex; flex-direction: column; gap: 14px; }
+.admin-field { display: flex; flex-direction: column; gap: 6px; }
+.field-lbl {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #374151;
+  padding: 0 2px;
+}
+.admin-field input {
+  font-family: inherit;
+  font-size: 14.5px;
+  padding: 12px 14px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  background: #f9fafb;
+  color: #1a1a1a;
+  transition: border-color .15s, background .15s;
+  width: 100%;
+  outline: none;
+}
+.admin-field input::placeholder { color: #9ca3af; }
+.admin-field input:focus {
+  border-color: #1a3a6e;
+  background: #fff;
+}
+.pass-wrap { position: relative; }
+.pass-eye {
+  position: absolute;
+  top: 50%; inset-inline-start: 10px;
+  transform: translateY(-50%);
+  width: 32px; height: 32px;
+  display: grid; place-items: center;
+  color: #6b7280;
+  cursor: pointer;
+  border-radius: 8px;
+}
+.pass-eye:hover { color: #1a3a6e; background: #f3f4f6; }
+.pass-wrap input { padding-inline-start: 44px; }
+
+.admin-err {
+  font-size: 13px;
+  color: #b91c1c;
+  background: #fee2e2;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border-inline-start: 3px solid #ef4444;
+}
+
+.admin-submit {
+  margin-top: 4px;
+  padding: 13px;
+  background: #1a3a6e;
+  color: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background .15s, transform .1s;
+}
+.admin-submit:hover { background: #142b54; }
+.admin-submit:active { transform: scale(0.98); }
+
+.admin-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  justify-content: center;
+  font-size: 11.5px;
+  color: #9ca3af;
+  margin-top: 6px;
+}
+
+@media (max-width: 540px) {
+  .admin-modal { padding: 24px 22px 20px; }
+  .admin-modal-head h3 { font-size: 18px; }
+  .footer-divider { flex-direction: column; gap: 10px; text-align: center; }
 }
 
 /* ============== MOE-specific emblem (inspired circles) ============== */

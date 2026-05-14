@@ -309,7 +309,7 @@ function About() {
   );
 }
 
-function Footer() {
+function Footer({ onAdminClick }) {
   return (
     <footer className="footer" id="contact">
       <div className="container">
@@ -336,7 +336,14 @@ function Footer() {
           </div>
         </div>
         <div className="footer-divider">
-          © 2026 School Smart Pro · جميع الحقوق محفوظة
+          <span>© 2026 School Smart Pro · جميع الحقوق محفوظة</span>
+          <button className="admin-link" onClick={onAdminClick}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="13" height="13">
+              <rect x="4" y="11" width="16" height="10" rx="2"/>
+              <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+            </svg>
+            دخول مدير الموقع
+          </button>
         </div>
       </div>
     </footer>
@@ -498,6 +505,104 @@ function Sidebar({ open, setOpen, mode, setMode, theme }) {
   );
 }
 
+function AdminLoginModal({ open, onClose }) {
+  const [user, setUser] = React.useState('admin');
+  const [pass, setPass] = React.useState('');
+  const [showPass, setShowPass] = React.useState(false);
+  const [err, setErr] = React.useState('');
+  const userInputRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (open) {
+      setErr('');
+      setPass('');
+      setTimeout(() => userInputRef.current?.focus(), 100);
+      const onEsc = (e) => { if (e.key === 'Escape') onClose(); };
+      document.addEventListener('keydown', onEsc);
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.removeEventListener('keydown', onEsc);
+        document.body.style.overflow = '';
+      };
+    }
+  }, [open]);
+
+  if (!open) return null;
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (!user.trim() || !pass.trim()) {
+      setErr('من فضلك أدخل اسم المستخدم وكلمة المرور');
+      return;
+    }
+    // Mock authentication - any credentials work in this demo
+    try {
+      localStorage.setItem('ssp-admin-auth', '1');
+      localStorage.setItem('ssp-admin-name', user.trim());
+    } catch(e) {}
+    window.location.href = 'لوحة المدير.html';
+  };
+
+  return (
+    <div className="admin-modal-backdrop" onClick={onClose}>
+      <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+        <button className="admin-modal-close" onClick={onClose} aria-label="إغلاق">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" width="18" height="18"><path d="M6 6l12 12M6 18 18 6"/></svg>
+        </button>
+        <div className="admin-modal-head">
+          <div className="admin-modal-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="22" height="22">
+              <rect x="4" y="11" width="16" height="10" rx="2"/>
+              <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+            </svg>
+          </div>
+          <h3>دخول مدير الموقع</h3>
+          <p>أدخل بياناتك للوصول إلى لوحة الإدارة</p>
+        </div>
+        <form className="admin-form" onSubmit={handleLogin}>
+          <label className="admin-field">
+            <span className="field-lbl">اسم المستخدم</span>
+            <input
+              ref={userInputRef}
+              type="text"
+              value={user}
+              onChange={(e) => setUser(e.target.value)}
+              placeholder="admin"
+              autoComplete="username"
+            />
+          </label>
+          <label className="admin-field">
+            <span className="field-lbl">كلمة المرور</span>
+            <div className="pass-wrap">
+              <input
+                type={showPass ? 'text' : 'password'}
+                value={pass}
+                onChange={(e) => setPass(e.target.value)}
+                placeholder="••••••••"
+                autoComplete="current-password"
+              />
+              <button type="button" className="pass-eye" onClick={() => setShowPass(s => !s)} tabIndex={-1} aria-label="إظهار/إخفاء">
+                {showPass
+                  ? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                  : <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>}
+              </button>
+            </div>
+          </label>
+          {err && <div className="admin-err">{err}</div>}
+          <button type="submit" className="admin-submit">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            تسجيل الدخول
+          </button>
+          <div className="admin-hint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" width="13" height="13"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+            هذه نسخة تجريبية — أي بيانات تعمل
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [theme, setTheme] = React.useState(() => {
     try { return localStorage.getItem('ssp-theme') || 'classic'; } catch(e) { return 'classic'; }
@@ -506,6 +611,7 @@ function App() {
     try { return localStorage.getItem('ssp-sidebar-mode') || 'manual'; } catch(e) { return 'manual'; }
   });
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const [adminOpen, setAdminOpen] = React.useState(false);
 
   React.useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -537,7 +643,7 @@ function App() {
       <Services/>
       <Stats/>
       <About/>
-      <Footer/>
+      <Footer onAdminClick={() => setAdminOpen(true)}/>
 
       {sidebarMode === 'auto' && !sidebarOpen && (
         <div className="edge-trigger" onMouseEnter={handleEdgeEnter}></div>
@@ -564,6 +670,8 @@ function App() {
         setMode={setSidebarMode}
         theme={theme}
       />
+
+      <AdminLoginModal open={adminOpen} onClose={() => setAdminOpen(false)}/>
     </React.Fragment>
   );
 }

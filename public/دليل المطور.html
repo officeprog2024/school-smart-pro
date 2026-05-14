@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تعليمات استخدام GitHub و Git مع Claude Design</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <style>
+    :root {
+      --navy: #1a3a6e;
+      --navy-deep: #142b54;
+      --orange: #f5a623;
+      --bg: #fafbfd;
+      --bg-card: #ffffff;
+      --text: #1f2937;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --border-soft: #f1f3f7;
+      --code-bg: #0f172a;
+      --code-text: #e2e8f0;
+      --code-comment: #64748b;
+      --success: #16a34a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Tajawal', system-ui, sans-serif;
+      direction: rtl;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.75;
+      font-size: 15.5px;
+    }
+    .container { max-width: 920px; margin: 0 auto; padding: 0 24px; }
+
+    /* Header */
+    header.page-head {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
+      color: #fff;
+      padding: 70px 0 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    header.page-head::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image:
+        radial-gradient(circle at 90% 10%, rgba(245,166,35,0.18), transparent 50%),
+        radial-gradient(circle at 10% 90%, rgba(99,102,241,0.18), transparent 50%);
+    }
+    .head-inner { position: relative; z-index: 1; text-align: center; }
+    .badge-row { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; background: rgba(255,255,255,0.12); border-radius: 999px; font-size: 13px; font-weight: 600; margin-bottom: 18px; }
+    .badge-row .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); }
+    h1.title {
+      font-size: 38px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      max-width: 720px;
+      margin: 0 auto 14px;
+    }
+    .subtitle {
+      font-size: 17px;
+      color: rgba(255,255,255,0.85);
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* TOC */
+    .toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px 24px;
+      margin: -40px auto 50px;
+      max-width: 720px;
+      box-shadow: 0 8px 24px rgba(15,23,42,0.06);
+      position: relative;
+      z-index: 2;
+    }
+    .toc h3 { font-size: 14px; color: var(--text-muted); font-weight: 700; margin-bottom: 14px; letter-spacing: 0.06em; }
+    .toc ol { list-style: none; counter-reset: toc; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; }
+    .toc li { counter-increment: toc; }
+    .toc a {
+      display: flex; align-items: center; gap: 12px;
+      padding: 8px 0; color: var(--text); text-decoration: none;
+      font-weight: 600; font-size: 14.5px;
+      transition: color .15s;
+    }
+    .toc a::before {
+      content: counter(toc, decimal-leading-zero);
+      width: 30px; height: 30px; border-radius: 8px;
+      background: var(--bg); color: var(--navy);
+      display: grid; place-items: center;
+      font-size: 12px; font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      flex-shrink: 0;
+      transition: background .15s, color .15s;
+    }
+    .toc a:hover { color: var(--navy); }
+    .toc a:hover::before { background: var(--navy); color: #fff; }
+
+    /* Sections */
+    section.step {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 32px 32px 28px;
+      margin-bottom: 22px;
+      scroll-margin-top: 24px;
+    }
+    .step-head {
+      display: flex; align-items: flex-start; gap: 18px;
+      margin-bottom: 18px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--navy), var(--navy-deep));
+      color: #fff;
+      display: grid; place-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 17px;
+      font-weight: 800;
+    }
+    .step-title { font-size: 22px; font-weight: 800; color: var(--navy); margin-bottom: 4px; letter-spacing: -0.01em; }
+    .step-desc { font-size: 14.5px; color: var(--text-muted); }
+    .step-body { font-size: 15px; }
+    .step-body p + p,
+    .step-body p + ol,
+    .step-body p + ul,
+    .step-body ol + p,
+    .step-body ul + p { margin-top: 14px; }
+    .step-body ol, .step-body ul { padding-inline-start: 22px; margin-bottom: 14px; }
+    .step-body li { margin-bottom: 6px; }
+    .step-body a { color: var(--navy); font-weight: 600; text-decoration: underline; text-decoration-color: rgba(26,58,110,0.3); text-underline-offset: 3px; }
+    .step-body a:hover { text-decoration-color: var(--navy); }
+    .step-body strong { color: var(--navy); font-weight: 700; }
+    .step-body code:not(.code-block code) {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--navy);
+      direction: ltr;
+      display: inline-block;
+    }
+
+    /* Code blocks */
+    .code-block {
+      background: var(--code-bg);
+      border-radius: 12px;
+      margin: 16px 0;
+      position: relative;
+      overflow: hidden;
+      direction: ltr;
+    }
+    .code-block-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .code-lang {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #94a3b8;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .code-lang::before {
+      content: "";
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--orange);
+    }
+    .code-copy {
+      background: rgba(255,255,255,0.08);
+      color: #cbd5e1;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background .15s, color .15s;
+    }
+    .code-copy:hover { background: rgba(255,255,255,0.14); color: #fff; }
+    .code-copy.copied { background: var(--success); color: #fff; }
+    .code-copy svg { width: 13px; height: 13px; }
+
+    .code-block pre {
+      margin: 0;
+      padding: 16px 18px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13.5px;
+      color: var(--code-text);
+      line-height: 1.7;
+    }
+    .code-block .com { color: var(--code-comment); font-style: italic; }
+    .code-block .cmd { color: #fbbf24; }
+    .code-block .str { color: #86efac; }
+    .code-block .flag { color: #93c5fd; }
+
+    /* Callouts */
+    .callout {
+      background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%);
+      border: 1px solid #fcd34d;
+      border-inline-start: 4px solid var(--orange);
+      padding: 14px 18px;
+      border-radius: 10px;
+      margin: 14px 0;
+      font-size: 14px;
+      color: #78350f;
+      display: flex; align-items: flex-start; gap: 12px;
+    }
+    .callout svg { flex-shrink: 0; margin-top: 2px; color: var(--orange); }
+    .callout strong { color: #78350f; }
+
+    /* Table */
+    table.cmds {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 14px;
+    }
+    table.cmds th, table.cmds td {
+      padding: 12px 14px;
+      text-align: right;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    table.cmds th {
+      background: var(--bg);
+      font-size: 12.5px;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    table.cmds td code {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 3px 8px;
+      border-radius: 5px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      direction: ltr;
+      display: inline-block;
+    }
+    table.cmds tr:last-child td { border-bottom: none; }
+
+    /* Footer */
+    footer.page-foot {
+      text-align: center;
+      padding: 50px 24px 60px;
+      color: var(--text-muted);
+      font-size: 13.5px;
+    }
+    footer.page-foot strong { color: var(--navy); font-weight: 700; }
+    footer.page-foot .heart { color: #ef4444; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      inset-inline-start: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--success);
+      color: #fff;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 8px 24px rgba(22,163,74,0.35);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s, transform .25s;
+      z-index: 999;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 680px) {
+      header.page-head { padding: 50px 0 60px; }
+      h1.title { font-size: 26px; }
+      .subtitle { font-size: 15px; }
+      .toc { margin: -30px 18px 36px; padding: 18px; }
+      .toc ol { grid-template-columns: 1fr; gap: 4px; }
+      section.step { padding: 22px 18px 18px; border-radius: 14px; }
+      .step-head { gap: 12px; padding-bottom: 14px; margin-bottom: 14px; }
+      .step-num { width: 36px; height: 36px; font-size: 14px; }
+      .step-title { font-size: 18px; }
+      .code-block pre { font-size: 12.5px; padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="page-head">
+  <div class="container head-inner">
+    <div class="badge-row">
+      <span class="dot"></span>
+      <span>دليل المطور · Workflow</span>
+    </div>
+    <h1 class="title">تعليمات استخدام GitHub و Git مع Claude Design</h1>
+    <p class="subtitle">دليل خطوة بخطوة لمزامنة مشروعك بين Claude والجهاز المحلي عبر GitHub</p>
+  </div>
+</header>
+
+<div class="container">
+
+  <nav class="toc">
+    <h3>المحتويات</h3>
+    <ol>
+      <li><a href="#req">المتطلبات الأساسية</a></li>
+      <li><a href="#first">رفع المشروع لأول مرة</a></li>
+      <li><a href="#update">تحديثات Claude</a></li>
+      <li><a href="#other">العمل على جهاز آخر</a></li>
+      <li><a href="#revert">التراجع لإصدار سابق</a></li>
+      <li><a href="#deploy">النشر على الإنترنت</a></li>
+      <li><a href="#cmds">مرجع الأوامر السريع</a></li>
+    </ol>
+  </nav>
+
+  <!-- Step 1 -->
+  <section class="step" id="req">
+    <div class="step-head">
+      <div class="step-num">01</div>
+      <div>
+        <div class="step-title">المتطلبات الأساسية</div>
+        <div class="step-desc">جهّز هذه الأدوات مرة واحدة فقط</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <ol>
+        <li>ثبّت <a href="https://git-scm.com" target="_blank" rel="noopener">Git</a> على جهازك.</li>
+        <li>أنشئ حساباً على <a href="https://github.com" target="_blank" rel="noopener">GitHub</a> إن لم يكن لديك.</li>
+        <li>ثبّت <a href="https://nodejs.org" target="_blank" rel="noopener">Node.js</a> (إصدار LTS).</li>
+      </ol>
+      <p>للتحقق من التثبيت:</p>
+      <div class="code-block">
+        <div class="code-block-head">
+          <span class="code-lang">terminal</span>
+          <button class="code-copy" data-code="git --version&#10;node --version"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>نسخ</span></button>
+        </div>
+<pre><span class="cmd">git</span> --version
+<span class="cmd">node</span> --version</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 2 -->
+  <section class="step" id="first">
+    <div class="step-head">
+      <div class="step-num">02</div>
+      <div>
+        <div class="step-title">رفع المشروع لأول مرة</div>
+        <div class="step-desc">إنشاء repo على GitHub ورفع الكود من جهازك</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <ol>
+        <li>اذهب إلى <a href="https://github.com/new" target="_blank" rel="noopener">github.com/new</a> وأنشئ repo باسم <code>school-smart-pro</code>.</li>
+        <li><strong>لا تختر</strong> أي ملف افتراضي (README / .gitignore / license).</li>
+        <li>افتح Terminal داخل مجلد <code>vite-project</code> ونفّذ:</li>
+      </ol>
+      <div class="code-block">
+        <div class="code-block-head">
+          <span class="code-lang">bash</span>
+          <button class="code-copy" data-code='git init&#10;git add .&#10;git commit -m "Initial commit"&#10;git branch -M main&#10;git remote add origin https://github.com/USERNAME/school-smart-pro.git&#10;git push -u origin main'><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>نسخ</span></button>
+        </div>
+<pre><span class="cmd">git</span> init
+<span class="cmd">git</span> add .
+<span class="cmd">git</span> commit <span class="flag">-m</span> <span class="str">"Initial commit"</span>
+<span class="cmd">git</span> branch <span class="flag">-M</span> main
+<span class="cmd">git</span> remote add origin https://github.com/USERNAME/school-smart-pro.git
+<span class="cmd">git</span> push <span class="flag">-u</span> origin main</pre>
+      </div>
+      <div class="callout">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <div>استبدل <strong>USERNAME</strong> باسم مستخدمك على GitHub. عند أول <code>push</code> قد يطلب منك تسجيل الدخول عبر نافذة المتصفح.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 3 -->
+  <section class="step" id="update">
+    <div class="step-head">
+      <div class="step-num">03</div>
+      <div>
+        <div class="step-title">تحديثات Claude — سير العمل المعتاد</div>
+        <div class="step-desc">عندما يُعدّل Claude ملفات المشروع</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <ol>
+        <li>حمّل الملفات المُعدَّلة (عادةً <code>App.jsx</code> و <code>styles.css</code>).</li>
+        <li>استبدلها في <code>vite-project/src/</code> على جهازك.</li>
+        <li>أعد رفعها لـ GitHub بأمر واحد:</li>
+      </ol>
+      <div class="code-block">
+        <div class="code-block-head">
+          <span class="code-lang">bash</span>
+          <button class="code-copy" data-code='git add .&#10;git commit -m "Update from Claude"&#10;git push'><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>نسخ</span></button>
+        </div>
+<pre><span class="cmd">git</span> add .
+<span class="cmd">git</span> commit <span class="flag">-m</span> <span class="str">"Update from Claude"</span>
+<span class="cmd">git</span> push</pre>
+      </div>
+      <p>أثناء التطوير، شغّل خادم Vite في نافذة Terminal منفصلة:</p>
+      <div class="code-block">
+        <div class="code-block-head">
+          <span class="code-lang">bash</span>
+          <button class="code-copy" data-code="npm run dev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>نسخ</span></button>
+        </div>
+<pre><span class="cmd">npm</span> run dev</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 4 -->
+  <section class="step" id="other">
+    <div class="step-head">
+      <div class="step-num">04</div>
+      <div>
+        <div class="step-title">العمل على جهاز آخر</div>
+        <div class="step-desc">استنساخ المشروع من أي مكان</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="code-block">
+        <div class="code-block-head">
+          <span class="code-lang">bash</span>
+          <button class="code-copy" data-code="git clone https://github.com/USERNAME/school-smart-pro.git&#10;cd school-smart-pro&#10;npm install&#10;npm run dev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>نسخ</span></button>
+        </div>
+<pre><span class="cmd">git</span> clone https://github.com/USERNAME/school-smart-pro.git
+<span class="cmd">cd</span> school-smart-pro
+<span class="cmd">npm</span> install
+<span class="cmd">npm</span> run dev</pre>
+      </div>
+      <p>لجلب آخر التحديثات إذا عدّلت من جهاز ثاني:</p>
+      <div class="code-block">
+        <div class="code-block-head">
+          <span class="code-lang">bash</span>
+          <button class="code-copy" data-code="git pull"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>نسخ</span></button>
+        </div>
+<pre><span class="cmd">git</span> pull</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 5 -->
+  <section class="step" id="revert">
+    <div class="step-head">
+      <div class="step-num">05</div>
+      <div>
+        <div class="step-title">التراجع لإصدار سابق</div>
+        <div class="step-desc">من مزايا Git الأقوى — رجوع لأي حالة سابقة</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>اعرض سجل التعديلات:</p>
+      <div class="code-block">
+        <div class="code-block-head">
+          <span class="code-lang">bash</span>
+          <button class="code-copy" data-code="git log --oneline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>نسخ</span></button>
+        </div>
+<pre><span class="cmd">git</span> log <span class="flag">--oneline</span></pre>
+      </div>
+      <p>استرجع ملفاً معيناً من commit سابق (استبدل <code>HASH</code> بأول 7 أحرف من المعرّف):</p>
+      <div class="code-block">
+        <div class="code-block-head">
+          <span class="code-lang">bash</span>
+          <button class="code-copy" data-code="git checkout HASH -- src/App.jsx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>نسخ</span></button>
+        </div>
+<pre><span class="cmd">git</span> checkout HASH <span class="flag">--</span> src/App.jsx</pre>
+      </div>
+      <p>التراجع عن آخر commit مع الإبقاء على التعديلات في مجلد العمل:</p>
+      <div class="code-block">
+        <div class="code-block-head">
+          <span class="code-lang">bash</span>
+          <button class="code-copy" data-code="git reset --soft HEAD~1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>نسخ</span></button>
+        </div>
+<pre><span class="cmd">git</span> reset <span class="flag">--soft</span> HEAD~1</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 6 -->
+  <section class="step" id="deploy">
+    <div class="step-head">
+      <div class="step-num">06</div>
+      <div>
+        <div class="step-title">النشر المباشر على الإنترنت</div>
+        <div class="step-desc">من GitHub إلى موقع حيّ في دقائق — مجاناً</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>ربط مستودعك بإحدى الخدمتين، وستحدّث الموقع تلقائياً بعد كل <code>git push</code>:</p>
+      <ul>
+        <li><strong><a href="https://vercel.com" target="_blank" rel="noopener">Vercel</a></strong> — اضغط <em>Import Project</em>، اختر المستودع، النشر تلقائي.</li>
+        <li><strong><a href="https://netlify.com" target="_blank" rel="noopener">Netlify</a></strong> — نفس الفكرة، يدعم Vite تلقائياً.</li>
+        <li><strong><a href="https://pages.cloudflare.com" target="_blank" rel="noopener">Cloudflare Pages</a></strong> — سرعة عالية وحدّ مجاني سخي.</li>
+      </ul>
+      <div class="callout">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <div>كل هذه الخدمات تكتشف Vite تلقائياً ولا تحتاج إعدادات. فقط اربط حسابك بـ GitHub واختر المستودع.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 7 -->
+  <section class="step" id="cmds">
+    <div class="step-head">
+      <div class="step-num">07</div>
+      <div>
+        <div class="step-title">مرجع الأوامر السريع</div>
+        <div class="step-desc">احفظ هذه القائمة لتجدها بسرعة</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <table class="cmds">
+        <thead>
+          <tr><th>الأمر</th><th>الوظيفة</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>git status</code></td><td>عرض الملفات المعدّلة وحالة العمل</td></tr>
+          <tr><td><code>git add .</code></td><td>تجهيز كل التعديلات للـ commit</td></tr>
+          <tr><td><code>git commit -m "..."</code></td><td>تثبيت التعديلات في السجل المحلي</td></tr>
+          <tr><td><code>git push</code></td><td>رفع التعديلات إلى GitHub</td></tr>
+          <tr><td><code>git pull</code></td><td>جلب آخر التعديلات من GitHub</td></tr>
+          <tr><td><code>git log --oneline</code></td><td>عرض سجل التعديلات بشكل مختصر</td></tr>
+          <tr><td><code>git diff</code></td><td>عرض الفروقات بين الملفات الحالية وآخر commit</td></tr>
+          <tr><td><code>npm install</code></td><td>تثبيت المتطلبات (بعد كل clone)</td></tr>
+          <tr><td><code>npm run dev</code></td><td>تشغيل خادم التطوير</td></tr>
+          <tr><td><code>npm run build</code></td><td>بناء نسخة الإنتاج</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div>
+
+<footer class="page-foot">
+  <p>دليل المطور · <strong>School Smart Pro</strong></p>
+  <p style="margin-top:4px;font-size:12.5px;">صُنع <span class="heart">♥</span> مع Claude Design</p>
+</footer>
+
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="m5 12 5 5 9-11"/></svg>
+  <span>تم النسخ!</span>
+</div>
+
+<script>
+  document.querySelectorAll('.code-copy').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const code = btn.dataset.code;
+      try {
+        await navigator.clipboard.writeText(code);
+        btn.classList.add('copied');
+        btn.querySelector('span').textContent = 'تم النسخ';
+        showToast();
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.querySelector('span').textContent = 'نسخ';
+        }, 1800);
+      } catch (e) {
+        // Fallback for non-secure contexts
+        const ta = document.createElement('textarea');
+        ta.value = code; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); showToast(); } catch(err) {}
+        document.body.removeChild(ta);
+      }
+    });
+  });
+
+  const toast = document.getElementById('toast');
+  let toastTimer;
+  function showToast() {
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 1600);
+  }
+</script>
+
+</body>
+</html>

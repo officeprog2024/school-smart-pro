@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>README - School Smart Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <style>
+    :root {
+      --navy: #1a3a6e;
+      --orange: #f5a623;
+      --bg: #fafbfd;
+      --text: #1f2937;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --border-soft: #f1f3f7;
+      --code-bg: #0f172a;
+      --code-text: #e2e8f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Tajawal', system-ui, sans-serif;
+      direction: rtl;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.75;
+      font-size: 15.5px;
+    }
+    a { color: var(--navy); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+    /* Top bar */
+    .topbar {
+      background: #fff;
+      border-bottom: 1px solid var(--border-soft);
+      position: sticky; top: 0; z-index: 50;
+    }
+    .topbar-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 14px;
+      border-radius: 10px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 13.5px; font-weight: 700;
+      transition: background .15s;
+    }
+    .back-btn:hover { background: var(--border); }
+    .file-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 12px;
+      background: rgba(245,166,35,0.12);
+      color: #b45309;
+      border-radius: 8px;
+      font-size: 12.5px; font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      direction: ltr;
+    }
+
+    /* Doc card */
+    main { max-width: 900px; margin: 0 auto; padding: 32px 24px 80px; }
+    .doc {
+      background: #fff;
+      border: 1px solid var(--border-soft);
+      border-radius: 16px;
+      padding: 40px 44px;
+      box-shadow: 0 4px 16px rgba(15,23,42,0.04);
+    }
+    .doc h1 {
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--navy);
+      letter-spacing: -0.015em;
+      margin-bottom: 8px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .doc h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--navy);
+      margin: 32px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .doc h3 {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text);
+      margin: 22px 0 10px;
+    }
+    .doc p { margin-bottom: 14px; }
+    .doc ul, .doc ol {
+      padding-inline-start: 24px;
+      margin-bottom: 18px;
+    }
+    .doc li { margin-bottom: 6px; }
+    .doc strong { color: var(--navy); font-weight: 700; }
+    .doc em { color: var(--orange); font-style: normal; font-weight: 700; }
+    .doc code {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--navy);
+      direction: ltr;
+      display: inline-block;
+    }
+    .doc hr {
+      border: none;
+      border-top: 1px solid var(--border-soft);
+      margin: 30px 0;
+    }
+
+    /* Code blocks */
+    .doc pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 18px 20px;
+      border-radius: 10px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13.5px;
+      line-height: 1.75;
+      margin-bottom: 18px;
+      direction: ltr;
+      text-align: left;
+      position: relative;
+    }
+    .doc pre code {
+      background: none; border: none; padding: 0;
+      color: inherit; font-size: inherit;
+      display: inline; white-space: pre;
+    }
+    .doc pre .copy-btn {
+      position: absolute;
+      top: 10px; left: 10px;
+      background: rgba(255,255,255,0.1);
+      color: #e2e8f0;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 11.5px; font-weight: 700;
+      transition: background .15s;
+      opacity: 0; transition: opacity .15s, background .15s;
+    }
+    .doc pre:hover .copy-btn { opacity: 1; }
+    .doc pre .copy-btn:hover { background: rgba(255,255,255,0.2); }
+    .doc pre .copy-btn.copied { background: #16a34a; opacity: 1; }
+
+    /* Table */
+    .doc table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 22px;
+      font-size: 14.5px;
+    }
+    .doc th, .doc td {
+      padding: 11px 14px;
+      text-align: right;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .doc th {
+      background: var(--bg);
+      font-size: 12.5px;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .doc tr:last-child td { border-bottom: none; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      inset-inline-start: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #16a34a; color: #fff;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-size: 14px; font-weight: 700;
+      box-shadow: 0 8px 24px rgba(22,163,74,0.35);
+      opacity: 0; pointer-events: none;
+      transition: opacity .25s, transform .25s;
+      z-index: 999;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 680px) {
+      .doc { padding: 24px 20px; }
+      .doc h1 { font-size: 24px; }
+      .doc h2 { font-size: 18px; }
+      .doc pre { font-size: 12.5px; padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="back-btn" href="لوحة المدير.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span>الرجوع للوحة المدير</span>
+    </a>
+    <span class="file-tag">README.md</span>
+  </div>
+</header>
+
+<main>
+  <article class="doc">
+    <h1>School Smart Pro</h1>
+    <p>منصة الإدارة المدرسية الذكية - صفحة هبوط مع 4 تصاميم قابلة للتبديل وقائمة جانبية متعددة الأنماط.</p>
+
+    <h2>التشغيل</h2>
+<pre><button class="copy-btn" data-code="npm install&#10;npm run dev">نسخ</button><code><span style="color:#94a3b8"># 1. تثبيت المتطلبات (مرة واحدة)</span>
+npm install
+
+<span style="color:#94a3b8"># 2. تشغيل خادم التطوير</span>
+npm run dev</code></pre>
+    <p>سيفتح المتصفح تلقائياً على <code>http://localhost:5173</code></p>
+
+    <h2>البناء للإنتاج</h2>
+<pre><button class="copy-btn" data-code="npm run build&#10;npm run preview">نسخ</button><code>npm run build      <span style="color:#94a3b8"># ينتج مجلد dist/</span>
+npm run preview    <span style="color:#94a3b8"># معاينة البناء النهائي</span></code></pre>
+
+    <h3>متى تستخدم كل أمر؟</h3>
+    <table>
+      <thead><tr><th>الأمر</th><th>متى تستخدمه</th></tr></thead>
+      <tbody>
+        <tr><td><code>npm run dev</code></td><td><strong>أثناء التطوير والتجربة</strong> — خادم محلي مع التحديث التلقائي (Hot Reload).</td></tr>
+        <tr><td><code>npm run build</code></td><td><strong>عند النشر على الإنترنت فقط</strong> — ينتج ملفات HTML/CSS/JS مُحسَّنة جاهزة للرفع على استضافة.</td></tr>
+        <tr><td><code>npm run preview</code></td><td>لمعاينة ناتج <code>build</code> محلياً قبل النشر.</td></tr>
+      </tbody>
+    </table>
+
+    <hr>
+
+    <h2>تعليمات استخدام GitHub و Git مع Claude Design</h2>
+
+    <h3>المتطلبات (مرة واحدة فقط)</h3>
+    <ol>
+      <li>ثبّت <a href="https://git-scm.com" target="_blank" rel="noopener">Git</a>.</li>
+      <li>أنشئ حساباً على <a href="https://github.com" target="_blank" rel="noopener">GitHub</a> إن لم يكن لديك.</li>
+    </ol>
+
+    <h3>رفع المشروع لأول مرة</h3>
+    <ol>
+      <li>أنشئ repo جديداً على <a href="https://github.com/new" target="_blank" rel="noopener">github.com/new</a> باسم <code>school-smart-pro</code> (بدون أي ملفات افتراضية).</li>
+      <li>من Terminal داخل مجلد <code>vite-project</code>:</li>
+    </ol>
+<pre><button class="copy-btn" data-code='git init&#10;git add .&#10;git commit -m "Initial commit"&#10;git branch -M main&#10;git remote add origin https://github.com/USERNAME/school-smart-pro.git&#10;git push -u origin main'>نسخ</button><code>git init
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git remote add origin https://github.com/USERNAME/school-smart-pro.git
+git push -u origin main</code></pre>
+    <p><strong>ملاحظة:</strong> استبدل <code>USERNAME</code> باسم مستخدمك على GitHub.</p>
+
+    <h3>سير العمل عند كل تحديث من Claude</h3>
+    <ol>
+      <li>حمّل الملفات المُعدَّلة (عادةً <code>App.jsx</code> و <code>styles.css</code>).</li>
+      <li>استبدلها في <code>vite-project/src/</code>.</li>
+      <li>ارفعها لـ GitHub:</li>
+    </ol>
+<pre><button class="copy-btn" data-code='git add .&#10;git commit -m "Update from Claude"&#10;git push'>نسخ</button><code>git add .
+git commit -m "Update from Claude"
+git push</code></pre>
+
+    <h3>العمل على جهاز آخر</h3>
+<pre><button class="copy-btn" data-code="git clone https://github.com/USERNAME/school-smart-pro.git&#10;cd school-smart-pro&#10;npm install&#10;npm run dev">نسخ</button><code>git clone https://github.com/USERNAME/school-smart-pro.git
+cd school-smart-pro
+npm install
+npm run dev</code></pre>
+
+    <h3>التراجع لإصدار سابق</h3>
+<pre><button class="copy-btn" data-code="git log --oneline&#10;git checkout HASH -- file.jsx">نسخ</button><code>git log --oneline              <span style="color:#94a3b8"># عرض كل التعديلات</span>
+git checkout HASH -- file.jsx  <span style="color:#94a3b8"># استرجاع ملف معين</span></code></pre>
+
+    <h3>النشر المباشر على الإنترنت (اختياري)</h3>
+    <ul>
+      <li><a href="https://vercel.com" target="_blank" rel="noopener"><strong>Vercel</strong></a> — Import Project → اختر المستودع → النشر تلقائي.</li>
+      <li><a href="https://netlify.com" target="_blank" rel="noopener"><strong>Netlify</strong></a> — نفس الفكرة، يدعم Vite تلقائياً.</li>
+    </ul>
+    <p>عند كل <code>git push</code> يتحدّث الموقع المنشور تلقائياً.</p>
+
+    <hr>
+
+    <h2>الأنماط المتوفرة</h2>
+    <ul>
+      <li><strong>كلاسيكي</strong> — كحلي + برتقالي (مؤسسي)</li>
+      <li><strong>وزارة التعليم</strong> — تركواز/أزرق/أخضر (مستوحى من هوية MOE)</li>
+      <li><strong>حيوي</strong> — Glassmorphism بألوان زاهية</li>
+      <li><strong>مينيمال</strong> — أبيض/أسود + لمسة صدئة</li>
+    </ul>
+    <p>التبديل من زر "المظهر" في شريط التنقل. التفضيل محفوظ في localStorage.</p>
+
+    <h2>هيكل المشروع</h2>
+<pre><code>vite-project/
+├── package.json
+├── vite.config.js
+├── index.html
+└── src/
+    ├── main.jsx        <span style="color:#94a3b8"># نقطة الدخول</span>
+    ├── App.jsx         <span style="color:#94a3b8"># جميع المكونات</span>
+    └── styles.css      <span style="color:#94a3b8"># الأنماط + متغيرات الـ themes</span></code></pre>
+
+  </article>
+</main>
+
+<div class="toast" id="toast">تم النسخ ✓</div>
+
+<script>
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const code = btn.dataset.code;
+      try {
+        await navigator.clipboard.writeText(code);
+        btn.classList.add('copied');
+        btn.textContent = 'تم ✓';
+        document.getElementById('toast').classList.add('show');
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.textContent = 'نسخ';
+          document.getElementById('toast').classList.remove('show');
+        }, 1500);
+      } catch(e) {}
+    });
+  });
+</script>
+
+</body>
+</html>
